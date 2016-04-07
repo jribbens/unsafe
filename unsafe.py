@@ -5,6 +5,7 @@
 # pylint: disable=redefined-builtin,unidiomatic-typecheck,eval-used,exec-used
 
 import ast
+import code
 import datetime
 import re
 import sys
@@ -155,5 +156,22 @@ def safe_eval(untrusted_source, additional=None):
                 safe_namespace(additional))
 
 
+class SafeInteractiveConsole(code.InteractiveConsole):
+    """A safe version of code.InteractiveConsole."""
+
+    def __init__(self, additional=None):
+        super().__init__(locals=safe_namespace(additional))
+        compiler = self.compile
+        def safe_compiler(source, filename, symbol):
+            """Compile and verify the code."""
+            compiled = compiler(source, filename, symbol)
+            safe_compile(source, "<input>", "exec")
+            return compiled
+        self.compile = safe_compiler
+
+
 if __name__ == "__main__":
-    safe_exec(sys.stdin.read())
+    if len(sys.argv) == 2 and sys.argv[1] == "-i":
+        SafeInteractiveConsole().interact()
+    else:
+        safe_exec(sys.stdin.read())
