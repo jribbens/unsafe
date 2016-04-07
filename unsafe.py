@@ -33,6 +33,10 @@ _SAFE_BUILTINS = (
 )
 
 
+def _safe_dir(obj):
+    return [name for name in dir(obj) if _check_name(name)]
+
+
 def _safe_eval(obj, globals=None, locals=None):
     if type(obj) is str:
         return eval(safe_compile(obj, "<script>", "eval"), globals, locals)
@@ -126,6 +130,7 @@ def safe_namespace(additional=None):
         "re": _copy_module(re),
     }
     namespace["__builtins__"].update(
+        dir=_safe_dir,
         eval=_safe_eval,
         exec=_safe_exec,
         getattr=_safe_getattr,
