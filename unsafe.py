@@ -7,6 +7,7 @@
 import ast
 import code
 import datetime
+import inspect
 import re
 import sys
 import types
@@ -33,19 +34,37 @@ _SAFE_BUILTINS = (
 )
 
 
-def _safe_dir(obj):
-    return [name for name in dir(obj) if _check_name(name)]
+def _safe_dir(*args):
+    names = (dir(*args) if args
+             else inspect.currentframe().f_back.f_locals.keys())
+    return [name for name in names if _check_name(name)]
 
 
 def _safe_eval(obj, globals=None, locals=None):
     if type(obj) is str:
+        if globals is None:
+            globals = inspect.currentframe().f_back.f_globals
+            if locals is None:
+                locals = inspect.currentframe().f_back.f_locals
+        elif locals is None:
+            locals = globals
+        if globals is None or locals is None:
+            raise RuntimeError("eval couldn't find globals or locals")
         return eval(safe_compile(obj, "<script>", "eval"), globals, locals)
     raise ValueError("Can only eval() strings")
 
 
-def _safe_exec(obj, *args):
+def _safe_exec(obj, globals=None, locals=None):
     if type(obj) is str:
-        exec(safe_compile(obj, "<script>", "exec"), *args)
+        if globals is None:
+            globals = inspect.currentframe().f_back.f_globals
+            if locals is None:
+                locals = inspect.currentframe().f_back.f_locals
+        elif locals is None:
+            locals = globals
+        if globals is None or locals is None:
+            raise RuntimeError("exec couldn't find globals or locals")
+        exec(safe_compile(obj, "<string>", "exec"), globals, locals)
     raise ValueError("Can only exec() strings")
 
 
