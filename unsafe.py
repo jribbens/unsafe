@@ -53,6 +53,7 @@ def _safe_exec(source):
         exec(safe_compile(source, "<string>", "exec"),
              inspect.currentframe().f_back.f_globals,
              inspect.currentframe().f_back.f_locals)
+        return
     raise TypeError("Can only exec() strings, not "+type(source).__name__)
 
 
