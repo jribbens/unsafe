@@ -112,11 +112,12 @@ def safe_compile(untrusted_source, filename, mode):
     return compile(tree, filename, mode)
 
 
-def _copy_module(module):
+def _copy_module(module, include=None, exclude=None):
     copied = types.ModuleType(module.__name__)
     copied.__package__ = getattr(module, "__package__", None)
     for name, value in module.__dict__.items():
-        if name.startswith("_"):
+        if (name.startswith("_") or (exclude is not None and name in exclude) or
+                (include is not None and name not in include)):
             continue
         type_ = type(value)
         if value is None or type_ in (bool, bytes, float, int, str):
