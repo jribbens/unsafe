@@ -170,13 +170,14 @@ class SafeInteractiveConsole(code.InteractiveConsole):
         def safe_compiler(source, filename, symbol):
             """Compile and verify the code."""
             compiled = compiler(source, filename, symbol)
-            safe_compile(source, "<input>", "exec")
+            if compiled is not None:
+                safe_compile(source, filename, symbol)
             return compiled
         self.compile = safe_compiler
 
 
 if __name__ == "__main__":
     if len(sys.argv) == 2 and sys.argv[1] == "-i":
-        SafeInteractiveConsole().interact()
+        SafeInteractiveConsole(additional={"print": print}).interact()
     else:
         safe_exec(sys.stdin.read())
