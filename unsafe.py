@@ -120,7 +120,9 @@ def _copy_module(module, include=None, exclude=None):
             setattr(copied, name, func_proxy(value))
         elif type_ is type and value is not type:
             try:
-                setattr(copied, name, types.new_class(name, bases=(value,)))
+                proxy = types.new_class(name, bases=(value,))
+                proxy.mro = lambda: []
+                setattr(copied, name, types.new_class(name, bases=(proxy,)))
             except TypeError:
                 pass
     return copied
