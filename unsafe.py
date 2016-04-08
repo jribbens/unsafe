@@ -45,7 +45,7 @@ def _safe_eval(source):
         return eval(safe_compile(source, "<script>", "eval"),
                     inspect.currentframe().f_back.f_globals,
                     inspect.currentframe().f_back.f_locals)
-    raise TypeError("Can only eval() strings")
+    raise TypeError("Can only eval() strings, not " + type(source).__name__)
 
 
 def _safe_exec(source):
@@ -54,7 +54,7 @@ def _safe_exec(source):
              inspect.currentframe().f_back.f_globals,
              inspect.currentframe().f_back.f_locals)
         return
-    raise TypeError("Can only exec() strings, not "+type(source).__name__)
+    raise TypeError("Can only exec() strings, not " + type(source).__name__)
 
 
 def _safe_delattr(obj, name):
