@@ -45,7 +45,7 @@ def _safe_eval(source):
         return eval(safe_compile(source, "<script>", "eval"),
                     inspect.currentframe().f_back.f_globals,
                     inspect.currentframe().f_back.f_locals)
-    raise ValueError("Can only eval() strings")
+    raise TypeError("Can only eval() strings")
 
 
 def _safe_exec(source):
@@ -53,7 +53,7 @@ def _safe_exec(source):
         exec(safe_compile(source, "<string>", "exec"),
              inspect.currentframe().f_back.f_globals,
              inspect.currentframe().f_back.f_locals)
-    raise ValueError("Can only exec() strings")
+    raise TypeError("Can only exec() strings, not "+type(source).__name__)
 
 
 def _safe_delattr(obj, name):
@@ -87,15 +87,15 @@ def safe_compile(untrusted_source, filename, mode):
     tree = compile(untrusted_source, filename, mode, ast.PyCF_ONLY_AST)
     for node in ast.walk(tree):
         if isinstance(node, ast.Name) and not _check_name(node.id):
-            raise ValueError(
+            raise SyntaxError(
                 "Access to private name {!r} is not allowed at line {}".
                 format(node.id, node.lineno))
         elif isinstance(node, ast.Attribute) and not _check_name(node.attr):
-            raise ValueError(
+            raise SyntaxError(
                 "Access to private attribute {!r} is not allowed at line {}".
                 format(node.attr, node.lineno))
         elif isinstance(node, ast.With):
-            raise ValueError("'with' is not allowed at line {}".format(
+            raise SyntaxError("'with' is not allowed at line {}".format(
                 node.lineno))
     return compile(tree, filename, mode)
 
