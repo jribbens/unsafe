@@ -75,7 +75,8 @@ def _safe_setattr(obj, name, value):
 
 
 def _check_name(name):
-    return not (name.startswith("_") or name in ("gi_frame", "gi_code"))
+    return not (name.startswith("_") or name in (
+        "cb_frame", "f_back", "gi_code", "gi_frame", "tb_frame"))
 
 
 def safe_compile(untrusted_source, filename, mode):
