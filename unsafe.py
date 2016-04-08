@@ -33,6 +33,17 @@ _SAFE_BUILTINS = (
     "staticmethod", "str", "sum", "super", "tuple", "zip"
 )
 
+_UNSAFE_NAMES = frozenset((
+    # Python 3.5 coroutine objects
+    "cb_frame",
+    # Frame objects
+    "f_back", "f_builtins", "f_code", "f_locals", "f_globals",
+    # Generator objects
+    "gi_code", "gi_frame",
+    # Traceback objects
+    "tb_frame", "tb_next",
+))
+
 
 def _safe_dir(*args):
     names = (dir(*args) if args
@@ -76,8 +87,7 @@ def _safe_setattr(obj, name, value):
 
 
 def _check_name(name):
-    return not (name.startswith("_") or name in (
-        "cb_frame", "f_back", "gi_code", "gi_frame", "tb_frame"))
+    return not (name.startswith("_") or name in _UNSAFE_NAMES)
 
 
 def safe_compile(untrusted_source, filename, mode):
@@ -96,9 +106,6 @@ def safe_compile(untrusted_source, filename, mode):
             raise SyntaxError(
                 "Access to private attribute {!r} is not allowed at line {}".
                 format(node.attr, node.lineno))
-        elif isinstance(node, ast.With):
-            raise SyntaxError("'with' is not allowed at line {}".format(
-                node.lineno))
     return compile(tree, filename, mode)
 
 
