@@ -40,31 +40,19 @@ def _safe_dir(*args):
     return [name for name in names if _check_name(name)]
 
 
-def _safe_eval(obj, globals=None, locals=None):
-    if type(obj) is str:
-        if globals is None:
-            globals = inspect.currentframe().f_back.f_globals
-            if locals is None:
-                locals = inspect.currentframe().f_back.f_locals
-        elif locals is None:
-            locals = globals
-        if globals is None or locals is None:
-            raise RuntimeError("eval couldn't find globals or locals")
-        return eval(safe_compile(obj, "<script>", "eval"), globals, locals)
+def _safe_eval(source):
+    if type(source) is str:
+        return eval(safe_compile(source, "<script>", "eval"),
+                    inspect.currentframe().f_back.f_globals,
+                    inspect.currentframe().f_back.f_locals)
     raise ValueError("Can only eval() strings")
 
 
-def _safe_exec(obj, globals=None, locals=None):
-    if type(obj) is str:
-        if globals is None:
-            globals = inspect.currentframe().f_back.f_globals
-            if locals is None:
-                locals = inspect.currentframe().f_back.f_locals
-        elif locals is None:
-            locals = globals
-        if globals is None or locals is None:
-            raise RuntimeError("exec couldn't find globals or locals")
-        exec(safe_compile(obj, "<string>", "exec"), globals, locals)
+def _safe_exec(source):
+    if type(source) is str:
+        exec(safe_compile(source, "<string>", "exec"),
+             inspect.currentframe().f_back.f_globals,
+             inspect.currentframe().f_back.f_locals)
     raise ValueError("Can only exec() strings")
 
 
