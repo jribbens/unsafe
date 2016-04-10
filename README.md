@@ -45,11 +45,5 @@ Namespace
 
 The namespace provided to untrusted code is of course restricted. I have
 provided access to nearly all of Python's standard builtins, but some things
-such as `type`, `vars`, `globals`, etc are blocked.
-
-`import` is implicitly blocked because `__import__` is not provided. I have
-however added restricted copies of the `datetime` and `re` modules pre-imported
-into the namespace as examples. Even modules such as these that might be
-considered safe cannot be added directly into the namespace as the untrusted
-code could alter them and then the altered code might be executed by the
-containing application.
+such as `type`, `vars`, `globals`, etc are blocked. `import` is allowed,
+but only of a restricted subset of white-listed standard library modules.
