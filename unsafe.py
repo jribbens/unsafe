@@ -218,10 +218,11 @@ class SafeInteractiveConsole(code.InteractiveConsole):
     def __init__(self, additional=None):
         super().__init__(locals=safe_namespace(additional))
         compiler = self.compile
+        pass_code = compile("pass", "", "exec").co_code
         def safe_compiler(source, filename, symbol):
             """Compile and verify the code."""
             compiled = compiler(source, filename, symbol)
-            if compiled is not None:
+            if compiled is not None and compiled.co_code != pass_code:
                 safe_compile(source, filename, symbol)
             return compiled
         self.compile = safe_compiler
