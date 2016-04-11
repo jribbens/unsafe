@@ -40,7 +40,7 @@ _SAFE_MODULES = frozenset((
 
 _UNSAFE_NAMES = frozenset((
     # Python 3.5 coroutine objects
-    "cb_frame",
+    "cr_code", "cr_frame",
     # Frame objects
     "f_back", "f_builtins", "f_code", "f_locals", "f_globals",
     # Generator objects
