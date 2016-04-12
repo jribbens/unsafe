@@ -32,10 +32,10 @@ _SAFE_BUILTINS = (
 )
 
 _SAFE_MODULES = frozenset((
-    "base64", "binascii", "bisect", "calendar", "cmath", "crypt", "datetime",
-    "enum", "errno", "fractions", "functools", "hashlib", "hmac", "ipaddress",
-    "itertools", "math", "numbers", "queue", "re", "statistics", "textwrap",
-    "unicodedata", "urllib.parse",
+    "cmath",
+    "datetime",
+    "math",
+    "re",
 ))
 
 _UNSAFE_NAMES = frozenset((
