@@ -92,7 +92,7 @@ def _safe_setattr(obj, name, value):
 
 
 def _check_name(name):
-    return not (name.startswith("_") or name in _UNSAFE_NAMES)
+    return name == "_" or not (name.startswith("_") or name in _UNSAFE_NAMES)
 
 
 def _safe_import(name, globals=None, locals=None, fromlist=(), level=0):
