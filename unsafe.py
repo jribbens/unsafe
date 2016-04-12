@@ -33,9 +33,9 @@ _SAFE_BUILTINS = (
 
 _SAFE_MODULES = frozenset((
     "base64", "binascii", "bisect", "calendar", "cmath", "crypt", "datetime",
-    "decimal", "enum", "errno", "fractions", "functools", "hashlib", "hmac",
-    "ipaddress", "itertools", "math", "numbers", "queue", "re", "statistics",
-    "textwrap", "unicodedata", "urllib.parse",
+    "enum", "errno", "fractions", "functools", "hashlib", "hmac", "ipaddress",
+    "itertools", "math", "numbers", "queue", "re", "statistics", "textwrap",
+    "unicodedata", "urllib.parse",
 ))
 
 _UNSAFE_NAMES = frozenset((
