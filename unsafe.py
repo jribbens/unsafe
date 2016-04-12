@@ -33,9 +33,7 @@ _SAFE_BUILTINS = (
 
 _SAFE_MODULES = frozenset((
     "cmath",
-    "datetime",
     "math",
-    "re",
 ))
 
 _UNSAFE_NAMES = frozenset((
