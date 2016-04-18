@@ -5,6 +5,7 @@
 # pylint: disable=redefined-builtin,unidiomatic-typecheck,eval-used,exec-used
 
 import ast
+import builtins
 import code
 import inspect
 import sys
@@ -173,7 +174,7 @@ def safe_namespace(additional=None):
     """
     namespace = {
         "__builtins__": dict(
-            (name, getattr(__builtins__, name)) for name in _SAFE_BUILTINS),
+            (name, getattr(builtins, name)) for name in _SAFE_BUILTINS),
         "__name__": "__script__",
         "__modules__": {},
     }
